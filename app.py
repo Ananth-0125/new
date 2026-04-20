@@ -360,6 +360,12 @@ section.main { max-width: 100% !important; }
 .stSuccess { background: #E8FEEE !important; color: #1A7A2A !important; border: 1px solid #AAFFBB !important; }
 .stWarning { background: #FFF8E0 !important; color: #A06000 !important; border: 1px solid #FFD080 !important; }
 .stError   { background: #FEE8E8 !important; color: #CC2200 !important; border: 1px solid #FFBBAA !important; }
+
+/* ── Scrollable history table (only this section scrolls) ── */
+div[data-testid="stVerticalBlock"] > div:last-child {
+    overflow-y: auto;
+    max-height: 350px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1081,13 +1087,14 @@ with col_right:
         st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
 
 # ============================================================
-# HISTORY TABLE
+# HISTORY TABLE — SCROLLABLE WITHIN THE PAGE
 # ============================================================
 if st.session_state.history_log:
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
     st.markdown('<div class="section-label">▸ Query History</div>', unsafe_allow_html=True)
     df = pd.DataFrame(st.session_state.history_log)
-    st.dataframe(df, use_container_width=True, hide_index=True,
+    # Fixed height to make only this table scrollable
+    st.dataframe(df, height=300, use_container_width=True, hide_index=True,
         column_config={
             "Query"     : st.column_config.TextColumn("Query",     width="large"),
             "Intent"    : st.column_config.TextColumn("Intent",    width="medium"),
