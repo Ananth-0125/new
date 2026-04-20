@@ -1,5 +1,7 @@
 """
-Customer Query Analyzer — Streamlit App  (Pink Theme)
+Customer Query Analyzer — Streamlit App (Pink Theme)
+Fit-in-one-window layout: Chat + Analysis Panel visible without scrolling.
+History table requires scroll down.
 Run: streamlit run app.py
 """
 
@@ -157,7 +159,7 @@ html, body, [class*="css"] {
     font-family: 'Roboto Mono', monospace !important;
 }
 
-/* ── Chat Window (reduced height) ── */
+/* ── Chat Window (reduced height for fit-in-window) ── */
 .chat-window {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -565,7 +567,7 @@ def build_messages(query, intent, sentiment, history=None):
     return [system_msg] + api_history
 
 # ============================================================
-# AI RESPONSE — Groq  (auto model fallback)
+# AI RESPONSE — Groq (auto model fallback)
 # ============================================================
 def _groq_post(api_key: str, model: str, messages: list, max_tokens: int = 300):
     try:
@@ -620,7 +622,7 @@ def latency_stats():
     return {"avg": round(sum(lats)/len(lats)), "min": min(lats), "max": max(lats)}
 
 # ============================================================
-# SIDEBAR (now includes session analytics)
+# SIDEBAR (contains session stats, sentiment pie, top intents)
 # ============================================================
 with st.sidebar:
     st.markdown("""
@@ -823,14 +825,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================================
-# MAIN LAYOUT (two columns)
+# MAIN LAYOUT (two columns: chat + analysis)
 # ============================================================
 col_chat, col_right = st.columns([1.05, 0.95], gap="large")
 
 with col_chat:
     st.markdown('<div class="section-label">▸ Chat Interface</div>', unsafe_allow_html=True)
 
-    # ── Chat Window (height reduced to 280px) ──
+    # ── Chat Window (height 280px – fits without scroll) ──
     if not st.session_state.messages:
         chat_html = """
         <div class="chat-window">
@@ -1084,7 +1086,7 @@ with col_right:
         )
 
 # ============================================================
-# HISTORY TABLE (bottom, requires scroll to view)
+# HISTORY TABLE (bottom – requires scroll down to view)
 # ============================================================
 if st.session_state.history_log:
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
