@@ -157,13 +157,13 @@ html, body, [class*="css"] {
     font-family: 'Roboto Mono', monospace !important;
 }
 
-/* ── Chat Window ── */
+/* ── Chat Window (reduced height) ── */
 .chat-window {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 14px 16px;
-    height: 400px;
+    height: 280px;
     overflow-y: auto;
     margin-bottom: 8px;
 }
@@ -236,33 +236,33 @@ html, body, [class*="css"] {
 .bar-blue  { background: var(--primary); height: 5px; border-radius: 2px; }
 .bar-red   { background: #CC2200; height: 5px; border-radius: 2px; }
 
-/* ── Metric Tiles ── */
+/* ── Metric Tiles (compact) ── */
 .metric-tile {
     background: var(--surface);
     border: 1px solid var(--border);
     border-top: 2px solid var(--primary);
     border-radius: 6px;
-    padding: 12px 10px;
+    padding: 8px 6px;
     text-align: center;
 }
 .metric-tile .val {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--text);
     font-family: 'Oswald', sans-serif !important;
     line-height: 1.1;
 }
 .metric-tile .lbl {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     color: var(--text-mute);
-    margin-top: 4px;
+    margin-top: 2px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-family: 'Roboto Mono', monospace !important;
 }
 
 /* ── Empty State ── */
-.empty-state { text-align: center; color: var(--text-mute); padding: 80px 20px; }
+.empty-state { text-align: center; color: var(--text-mute); padding: 40px 20px; }
 .empty-state .text { font-size: 0.87rem; color: var(--text-dim); }
 .empty-state .hint { font-size: 0.75rem; color: var(--text-mute); margin-top: 5px; }
 
@@ -620,7 +620,7 @@ def latency_stats():
     return {"avg": round(sum(lats)/len(lats)), "min": min(lats), "max": max(lats)}
 
 # ============================================================
-# SIDEBAR
+# SIDEBAR (now includes session analytics)
 # ============================================================
 with st.sidebar:
     st.markdown("""
@@ -714,6 +714,62 @@ with st.sidebar:
 
     st.markdown("<div style='height:1px;background:#F8D0E8;margin:12px 0;'></div>", unsafe_allow_html=True)
 
+    # --- Session Sentiment Pie Chart (moved from main panel) ---
+    if st.session_state.total_queries > 0:
+        st.markdown("<div class='sb-sec'>▸ SESSION SENTIMENT</div>", unsafe_allow_html=True)
+        counts = st.session_state.sentiment_counts
+        fig2 = go.Figure(go.Pie(
+            labels=["Negative","Neutral","Positive"],
+            values=[counts["negative"],counts["neutral"],counts["positive"]],
+            hole=0.55,
+            marker_colors=["#CC2200","#B87898","#1A7A2A"],
+            textfont=dict(size=9, family="Roboto Mono"),
+        ))
+        fig2.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#7A3060", family="Roboto Mono"),
+            height=160, margin=dict(l=10,r=10,t=10,b=10), showlegend=True,
+            legend=dict(
+                orientation="h", yanchor="bottom", y=-0.15,
+                xanchor="center", x=0.5,
+                font=dict(size=8, color="#7A3060")
+            ),
+            annotations=[dict(
+                text=f"<b>{st.session_state.total_queries}</b>",
+                x=0.5, y=0.5,
+                font=dict(size=14, color="#D6006D", family="Oswald"),
+                showarrow=False
+            )]
+        )
+        st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
+        st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+
+    # --- Intent Frequency Bar Chart (moved from main panel) ---
+    if st.session_state.intent_freq:
+        st.markdown("<div class='sb-sec'>▸ TOP INTENTS</div>", unsafe_allow_html=True)
+        sorted_i = sorted(st.session_state.intent_freq.items(), key=lambda x: x[1], reverse=True)[:5]
+        fig3 = go.Figure(go.Bar(
+            x=[x[1] for x in sorted_i],
+            y=[x[0].upper() for x in sorted_i],
+            orientation="h",
+            marker_color="#D6006D", opacity=0.85,
+            text=[x[1] for x in sorted_i],
+            textposition="auto",
+            textfont=dict(color="#ffffff", size=9, family="Roboto Mono"),
+        ))
+        fig3.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#7A3060", family="Roboto Mono"),
+            height=max(100, len(sorted_i)*28),
+            margin=dict(l=0,r=0,t=0,b=0),
+            xaxis=dict(showgrid=False, showticklabels=False),
+            yaxis=dict(showgrid=False, tickfont=dict(size=8, color="#7A3060")),
+            showlegend=False
+        )
+        st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
+        st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+
+    # --- Download and Clear buttons ---
     if st.session_state.history_log:
         df_exp   = pd.DataFrame(st.session_state.history_log)
         csv_data = df_exp.to_csv(index=False).encode("utf-8")
@@ -767,14 +823,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================================
-# MAIN LAYOUT
+# MAIN LAYOUT (two columns)
 # ============================================================
 col_chat, col_right = st.columns([1.05, 0.95], gap="large")
 
 with col_chat:
     st.markdown('<div class="section-label">▸ Chat Interface</div>', unsafe_allow_html=True)
 
-    # ── Chat Window ──
+    # ── Chat Window (height reduced to 280px) ──
     if not st.session_state.messages:
         chat_html = """
         <div class="chat-window">
@@ -944,7 +1000,7 @@ with col_chat:
 
             st.rerun()
 
-# ── ANALYTICS COLUMN ──
+# ── RIGHT COLUMN (only last query analysis) ──
 with col_right:
     st.markdown('<div class="section-label">▸ Analysis Panel</div>', unsafe_allow_html=True)
 
@@ -1027,61 +1083,8 @@ with col_right:
             '</div>', unsafe_allow_html=True
         )
 
-    if st.session_state.total_queries > 0:
-        st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="section-label">▸ Session Sentiment</div>', unsafe_allow_html=True)
-        counts = st.session_state.sentiment_counts
-        fig2 = go.Figure(go.Pie(
-            labels=["Negative","Neutral","Positive"],
-            values=[counts["negative"],counts["neutral"],counts["positive"]],
-            hole=0.55,
-            marker_colors=["#CC2200","#B87898","#1A7A2A"],
-            textfont=dict(size=10, family="Roboto Mono"),
-        ))
-        fig2.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#7A3060", family="Roboto Mono"),
-            height=185, margin=dict(l=0,r=0,t=0,b=0), showlegend=True,
-            legend=dict(
-                orientation="h", yanchor="bottom", y=-0.22,
-                xanchor="center", x=0.5,
-                font=dict(size=10, color="#7A3060")
-            ),
-            annotations=[dict(
-                text=f"<b>{st.session_state.total_queries}</b>",
-                x=0.5, y=0.5,
-                font=dict(size=16, color="#D6006D", family="Oswald"),
-                showarrow=False
-            )]
-        )
-        st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
-
-    if st.session_state.intent_freq:
-        st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="section-label">▸ Intent Frequency</div>', unsafe_allow_html=True)
-        sorted_i = sorted(st.session_state.intent_freq.items(), key=lambda x: x[1], reverse=True)[:6]
-        fig3 = go.Figure(go.Bar(
-            x=[x[1] for x in sorted_i],
-            y=[x[0].upper() for x in sorted_i],
-            orientation="h",
-            marker_color="#D6006D", opacity=0.85,
-            text=[x[1] for x in sorted_i],
-            textposition="auto",
-            textfont=dict(color="#ffffff", size=10, family="Roboto Mono"),
-        ))
-        fig3.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#7A3060", family="Roboto Mono"),
-            height=max(110, len(sorted_i)*30),
-            margin=dict(l=0,r=0,t=0,b=0),
-            xaxis=dict(showgrid=False, showticklabels=False),
-            yaxis=dict(showgrid=False, tickfont=dict(size=9, color="#7A3060")),
-            showlegend=False
-        )
-        st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
-
 # ============================================================
-# HISTORY TABLE
+# HISTORY TABLE (bottom, requires scroll to view)
 # ============================================================
 if st.session_state.history_log:
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
