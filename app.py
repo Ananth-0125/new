@@ -1,7 +1,7 @@
 """
 Customer Query Analyzer — Streamlit App (Pink Theme)
-Fit-in-one-window layout: Chat + Analysis Panel (current + session) visible without scrolling.
-History table requires scroll down.
+Layout: Sidebar = session analytics, Main = chat + current query (no scroll),
+History at bottom (scroll down).
 Run: streamlit run app.py
 """
 
@@ -60,11 +60,11 @@ html, body, [class*="css"] {
 .stApp { background: var(--bg) !important; }
 
 .block-container {
-    padding: 1rem 1rem 2rem 1rem !important;
+    padding: 0.8rem 1rem 1rem 1rem !important;
     max-width: 100% !important;
 }
 @media (min-width: 768px) {
-    .block-container { padding: 1.4rem 2rem 2rem 2rem !important; }
+    .block-container { padding: 1rem 2rem 1rem 2rem !important; }
 }
 
 /* ── Sidebar ── */
@@ -72,7 +72,7 @@ html, body, [class*="css"] {
     background: var(--surface) !important;
     border-right: 1px solid var(--border) !important;
 }
-[data-testid="stSidebar"] .block-container { padding: 1.2rem 1rem !important; }
+[data-testid="stSidebar"] .block-container { padding: 0.8rem 1rem !important; }
 [data-testid="stSidebarCollapseButton"] {
     background: var(--primary) !important;
     border-radius: 0 6px 6px 0 !important;
@@ -86,14 +86,14 @@ html, body, [class*="css"] {
 [data-testid="collapsedControl"]:hover { background: var(--primary-dark) !important; }
 [data-testid="collapsedControl"] svg { fill: #ffffff !important; }
 
-/* ── Page Header ── */
+/* ── Page Header (compact) ── */
 .page-header {
     background: linear-gradient(135deg, #FFE0F0 0%, #FFFFFF 60%, #FFF0FA 100%);
     border: 1px solid var(--border);
     border-left: 4px solid var(--primary);
     border-radius: 10px;
-    padding: 20px 24px;
-    margin-bottom: 18px;
+    padding: 12px 20px;
+    margin-bottom: 12px;
     position: relative;
     overflow: hidden;
 }
@@ -103,34 +103,32 @@ html, body, [class*="css"] {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 6rem;
+    font-size: 5rem;
     color: rgba(214,0,109,0.06);
     pointer-events: none;
     line-height: 1;
 }
 .page-header h1 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    margin: 0 0 5px 0;
+    margin: 0 0 2px 0;
     color: var(--text);
     letter-spacing: -0.3px;
-    font-family: 'Oswald', sans-serif !important;
 }
 .page-header p {
     margin: 0;
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     color: var(--text-dim);
-    font-family: 'Roboto Mono', monospace !important;
 }
-.header-tags { margin-bottom: 10px; }
+.header-tags { margin-bottom: 6px; }
 .htag {
     display: inline-block;
     background: var(--accent-dim);
     border: 1px solid rgba(255,128,192,0.5);
     color: #AA0057;
-    padding: 2px 10px;
+    padding: 1px 8px;
     border-radius: 2px;
-    font-size: 0.62rem;
+    font-size: 0.55rem;
     font-family: 'Roboto Mono', monospace !important;
     margin-right: 5px;
     text-transform: uppercase;
@@ -139,23 +137,23 @@ html, body, [class*="css"] {
 
 /* ── Section Labels ── */
 .section-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: var(--text-mute);
-    margin-bottom: 10px;
-    padding-bottom: 6px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
     border-bottom: 1px solid var(--border-dim);
     font-family: 'Roboto Mono', monospace !important;
 }
 .sb-sec {
-    font-size: 0.63rem;
+    font-size: 0.6rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: var(--text-mute);
-    margin: 14px 0 6px 0;
+    margin: 12px 0 4px 0;
     font-family: 'Roboto Mono', monospace !important;
 }
 
@@ -164,17 +162,17 @@ html, body, [class*="css"] {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 14px 16px;
-    height: 260px;
+    padding: 10px 12px;
+    height: 240px;
     overflow-y: auto;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 .bubble-user, .bubble-bot, .bubble-security {
     max-width: 85%;
-    padding: 9px 14px;
-    font-size: 0.86rem;
-    line-height: 1.5;
-    margin-bottom: 8px;
+    padding: 7px 12px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin-bottom: 6px;
     clear: both;
     font-family: 'Roboto Mono', monospace !important;
 }
@@ -199,12 +197,12 @@ html, body, [class*="css"] {
     float: left;
 }
 .msg-meta {
-    font-size: 0.63rem;
+    font-size: 0.58rem;
     color: var(--text-mute);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     font-family: 'Roboto Mono', monospace !important;
     display: flex;
-    gap: 5px;
+    gap: 4px;
     flex-wrap: wrap;
     align-items: center;
     clear: both;
@@ -216,9 +214,9 @@ html, body, [class*="css"] {
 /* ── Tags ── */
 .tag {
     display: inline-block;
-    padding: 1px 7px;
+    padding: 0px 6px;
     border-radius: 2px;
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 500;
     font-family: 'Roboto Mono', monospace !important;
     text-transform: uppercase;
@@ -234,9 +232,9 @@ html, body, [class*="css"] {
 .t-bad    { background: #FEE8E8; color: #CC2200; border: 1px solid #FFBBAA; }
 
 /* ── Progress Bars ── */
-.bar-track { background: var(--surface3); border-radius: 2px; height: 5px; margin: 3px 0 9px 0; overflow: hidden; }
-.bar-blue  { background: var(--primary); height: 5px; border-radius: 2px; }
-.bar-red   { background: #CC2200; height: 5px; border-radius: 2px; }
+.bar-track { background: var(--surface3); border-radius: 2px; height: 4px; margin: 2px 0 6px 0; overflow: hidden; }
+.bar-blue  { background: var(--primary); height: 4px; border-radius: 2px; }
+.bar-red   { background: #CC2200; height: 4px; border-radius: 2px; }
 
 /* ── Metric Tiles (compact) ── */
 .metric-tile {
@@ -244,29 +242,29 @@ html, body, [class*="css"] {
     border: 1px solid var(--border);
     border-top: 2px solid var(--primary);
     border-radius: 6px;
-    padding: 8px 6px;
+    padding: 6px 4px;
     text-align: center;
 }
 .metric-tile .val {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text);
     font-family: 'Oswald', sans-serif !important;
     line-height: 1.1;
 }
 .metric-tile .lbl {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     color: var(--text-mute);
     margin-top: 2px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     font-family: 'Roboto Mono', monospace !important;
 }
 
 /* ── Empty State ── */
-.empty-state { text-align: center; color: var(--text-mute); padding: 40px 20px; }
-.empty-state .text { font-size: 0.87rem; color: var(--text-dim); }
-.empty-state .hint { font-size: 0.75rem; color: var(--text-mute); margin-top: 5px; }
+.empty-state { text-align: center; color: var(--text-mute); padding: 30px 20px; }
+.empty-state .text { font-size: 0.8rem; color: var(--text-dim); }
+.empty-state .hint { font-size: 0.7rem; color: var(--text-mute); margin-top: 5px; }
 
 /* ── Buttons ── */
 .stButton > button, .stDownloadButton > button {
@@ -276,8 +274,8 @@ html, body, [class*="css"] {
     border-radius: 4px !important;
     font-weight: 500 !important;
     font-family: 'Roboto Mono', monospace !important;
-    font-size: 0.8rem !important;
-    padding: 6px 16px !important;
+    font-size: 0.7rem !important;
+    padding: 4px 12px !important;
     transition: all 0.15s ease !important;
     box-shadow: none !important;
     text-transform: uppercase;
@@ -293,12 +291,12 @@ html, body, [class*="css"] {
     color: #ffffff !important;
     border: none !important;
     border-radius: 4px !important;
-    font-size: 1.2rem !important;
+    font-size: 1rem !important;
     font-weight: 700 !important;
     padding: 0 !important;
     width: 100% !important;
-    min-height: 38px !important;
-    line-height: 38px !important;
+    min-height: 34px !important;
+    line-height: 34px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -330,7 +328,7 @@ div[data-baseweb="input"] input, .stTextInput input {
     border-radius: 4px !important;
     color: var(--text) !important;
     font-family: 'Roboto Mono', monospace !important;
-    font-size: 0.88rem !important;
+    font-size: 0.8rem !important;
 }
 div[data-baseweb="input"] input::placeholder { color: var(--text-mute) !important; }
 div[data-baseweb="input"] input:focus {
@@ -622,13 +620,13 @@ def latency_stats():
     return {"avg": round(sum(lats)/len(lats)), "min": min(lats), "max": max(lats)}
 
 # ============================================================
-# SIDEBAR (only API key, session stats, download/clear)
+# SIDEBAR (contains session stats, sentiment pie, top intents)
 # ============================================================
 with st.sidebar:
     st.markdown("""
-    <div style='padding:6px 0 14px 0; border-bottom:1px solid #F0A8CC; margin-bottom:2px;'>
-        <div style='font-size:0.95rem;font-weight:700;color:#2A0A1A;font-family:Oswald,sans-serif;letter-spacing:0.5px;'>QUERY ANALYZER</div>
-        <div style='font-size:0.62rem;color:#B87898;margin-top:2px;font-family:Roboto Mono,monospace;'>BERT + GROQ ENGINE</div>
+    <div style='padding:4px 0 10px 0; border-bottom:1px solid #F0A8CC; margin-bottom:2px;'>
+        <div style='font-size:0.9rem;font-weight:700;color:#2A0A1A;font-family:Oswald,sans-serif;letter-spacing:0.5px;'>QUERY ANALYZER</div>
+        <div style='font-size:0.55rem;color:#B87898;margin-top:2px;font-family:Roboto Mono,monospace;'>BERT + GROQ ENGINE</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -640,7 +638,7 @@ with st.sidebar:
     if _on_cloud:
         try:
             api_key = st.secrets["GROQ_API_KEY"]
-            st.markdown("<div style='font-size:0.69rem;color:#1A7A2A;margin-bottom:8px;font-family:Roboto Mono,monospace;'>✓ KEY LOADED FROM SECRETS</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:0.65rem;color:#1A7A2A;margin-bottom:6px;font-family:Roboto Mono,monospace;'>✓ KEY LOADED FROM SECRETS</div>", unsafe_allow_html=True)
         except Exception:
             api_key = ""
     if not api_key:
@@ -650,10 +648,10 @@ with st.sidebar:
         )
         if api_key:
             masked = api_key[:4] + "x" * min(len(api_key)-8, 10) + api_key[-4:] if len(api_key) > 8 else "x" * len(api_key)
-            st.markdown(f"<div style='font-size:0.69rem;color:#1A7A2A;margin:-2px 0 6px 0;font-family:Roboto Mono,monospace;'>✓ KEY SET: {masked}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-size:0.65rem;color:#1A7A2A;margin:-2px 0 4px 0;font-family:Roboto Mono,monospace;'>✓ KEY SET: {masked}</div>", unsafe_allow_html=True)
 
     st.markdown(
-        "<div style='font-size:0.68rem;color:#B87898;margin:4px 0 8px 0;font-family:Roboto Mono,monospace;'>"
+        "<div style='font-size:0.62rem;color:#B87898;margin:2px 0 6px 0;font-family:Roboto Mono,monospace;'>"
         "FREE · <a href='https://console.groq.com' style='color:#D6006D;text-decoration:none;'>CONSOLE.GROQ.COM</a></div>",
         unsafe_allow_html=True
     )
@@ -666,7 +664,7 @@ with st.sidebar:
             if ok:
                 st.markdown(
                     f"<div style='background:#E8FEEE;border:1px solid #AAFFBB;border-radius:6px;"
-                    f"padding:8px 10px;font-family:Roboto Mono,monospace;font-size:0.68rem;color:#1A7A2A;"
+                    f"padding:6px 8px;font-family:Roboto Mono,monospace;font-size:0.62rem;color:#1A7A2A;"
                     f"margin-bottom:6px;'>✓ CONNECTED<br>"
                     f"<span style='color:#7A3060;'>Model: {model_used}</span></div>",
                     unsafe_allow_html=True
@@ -674,13 +672,13 @@ with st.sidebar:
             else:
                 st.markdown(
                     f"<div style='background:#FEE8E8;border:1px solid #FFBBAA;border-radius:6px;"
-                    f"padding:8px 10px;font-family:Roboto Mono,monospace;font-size:0.67rem;color:#CC2200;"
+                    f"padding:6px 8px;font-family:Roboto Mono,monospace;font-size:0.62rem;color:#CC2200;"
                     f"margin-bottom:6px;'>✕ FAILED<br>"
                     f"<span style='color:#AA4444;word-break:break-all;'>{detail}</span></div>",
                     unsafe_allow_html=True
                 )
 
-    st.markdown("<div style='height:1px;background:#F8D0E8;margin:10px 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:1px;background:#F8D0E8;margin:8px 0;'></div>", unsafe_allow_html=True)
     st.markdown("<div class='sb-sec'>▸ SESSION STATS</div>", unsafe_allow_html=True)
 
     total = st.session_state.total_queries
@@ -708,14 +706,70 @@ with st.sidebar:
     for label, val, color in rows:
         st.markdown(
             f"<div style='display:flex;justify-content:space-between;"
-            f"font-size:0.76rem;padding:4px 0;border-bottom:1px solid #FFE8F4;font-family:Roboto Mono,monospace;'>"
+            f"font-size:0.7rem;padding:2px 0;border-bottom:1px solid #FFE8F4;font-family:Roboto Mono,monospace;'>"
             f"<span style='color:#B87898;'>{label}</span>"
             f"<span style='font-weight:700;color:{color};'>{val}</span>"
             f"</div>", unsafe_allow_html=True
         )
 
-    st.markdown("<div style='height:1px;background:#F8D0E8;margin:12px 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:1px;background:#F8D0E8;margin:10px 0;'></div>", unsafe_allow_html=True)
 
+    # Session Sentiment Pie (compact)
+    if st.session_state.total_queries > 0:
+        st.markdown("<div class='sb-sec'>▸ SESSION SENTIMENT</div>", unsafe_allow_html=True)
+        counts = st.session_state.sentiment_counts
+        fig2 = go.Figure(go.Pie(
+            labels=["Negative","Neutral","Positive"],
+            values=[counts["negative"],counts["neutral"],counts["positive"]],
+            hole=0.55,
+            marker_colors=["#CC2200","#B87898","#1A7A2A"],
+            textfont=dict(size=8, family="Roboto Mono"),
+        ))
+        fig2.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#7A3060", family="Roboto Mono"),
+            height=140, margin=dict(l=10,r=10,t=10,b=10), showlegend=True,
+            legend=dict(
+                orientation="h", yanchor="bottom", y=-0.12,
+                xanchor="center", x=0.5,
+                font=dict(size=7, color="#7A3060")
+            ),
+            annotations=[dict(
+                text=f"<b>{st.session_state.total_queries}</b>",
+                x=0.5, y=0.5,
+                font=dict(size=12, color="#D6006D", family="Oswald"),
+                showarrow=False
+            )]
+        )
+        st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
+        st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+
+    # Top Intents (compact)
+    if st.session_state.intent_freq:
+        st.markdown("<div class='sb-sec'>▸ TOP INTENTS</div>", unsafe_allow_html=True)
+        sorted_i = sorted(st.session_state.intent_freq.items(), key=lambda x: x[1], reverse=True)[:5]
+        fig3 = go.Figure(go.Bar(
+            x=[x[1] for x in sorted_i],
+            y=[x[0].upper() for x in sorted_i],
+            orientation="h",
+            marker_color="#D6006D", opacity=0.85,
+            text=[x[1] for x in sorted_i],
+            textposition="auto",
+            textfont=dict(color="#ffffff", size=8, family="Roboto Mono"),
+        ))
+        fig3.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#7A3060", family="Roboto Mono"),
+            height=90,
+            margin=dict(l=0,r=0,t=0,b=0),
+            xaxis=dict(showgrid=False, showticklabels=False),
+            yaxis=dict(showgrid=False, tickfont=dict(size=7, color="#7A3060")),
+            showlegend=False
+        )
+        st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
+        st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+
+    # Download and Clear buttons
     if st.session_state.history_log:
         df_exp   = pd.DataFrame(st.session_state.history_log)
         csv_data = df_exp.to_csv(index=False).encode("utf-8")
@@ -769,23 +823,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================================
-# MAIN LAYOUT (two columns: chat + analysis)
+# MAIN LAYOUT (two columns: chat + current analysis)
 # ============================================================
 col_chat, col_right = st.columns([1.05, 0.95], gap="large")
 
 with col_chat:
     st.markdown('<div class="section-label">▸ Chat Interface</div>', unsafe_allow_html=True)
 
-    # ── Chat Window (height 260px) ──
+    # Chat Window (height 240px)
     if not st.session_state.messages:
         chat_html = """
         <div class="chat-window">
             <div class="empty-state">
-                <div style="font-size:2.5rem;margin-bottom:12px;opacity:0.3;color:#D6006D;">▶</div>
+                <div style="font-size:2rem;margin-bottom:8px;opacity:0.3;color:#D6006D;">▶</div>
                 <div class="text">Model loaded — start a conversation</div>
-                <div class="hint">
-                    Type your query below to begin.
-                </div>
+                <div class="hint">Type your query below to begin.</div>
             </div>
         </div>"""
     else:
@@ -813,7 +865,7 @@ with col_chat:
                 tags = f'<span class="tag t-intent">{i_label}</span> <span class="tag {s_cls}">{SENTIMENT_LABEL.get(s, s).upper()}</span>'
                 if is_sec: tags += ' <span class="tag t-sec">⚠ SECURITY</span>'
                 if is_low: tags += ' <span class="tag t-low">~ LOW CONF</span>'
-                tags += f'{fb_tag} <span style="color:#F0A8CC;font-size:0.6rem;">{msg.get("time","")} · {msg.get("latency","")}</span>'
+                tags += f'{fb_tag} <span style="color:#F0A8CC;font-size:0.55rem;">{msg.get("time","")} · {msg.get("latency","")}</span>'
 
                 chat_html += (
                     f'<div class="{bubble}">{msg["content"]}</div>'
@@ -823,7 +875,7 @@ with col_chat:
 
     st.markdown(chat_html, unsafe_allow_html=True)
 
-    # ── Input Form ──
+    # Input Form
     with st.form("chat_form", clear_on_submit=True):
         input_col, arrow_col = st.columns([11, 1])
         with input_col:
@@ -835,7 +887,7 @@ with col_chat:
         with arrow_col:
             submitted = st.form_submit_button("▶", use_container_width=True)
 
-    # ── Feedback Section ──
+    # Feedback Section
     bot_msgs = [m for m in st.session_state.messages if m["role"] == "bot"]
     if bot_msgs:
         last_idx = len(st.session_state.messages) - 1
@@ -843,7 +895,7 @@ with col_chat:
             last_idx -= 1
 
         if last_idx >= 0 and st.session_state.messages[last_idx].get("feedback", "") == "":
-            st.markdown("<div style='font-size:0.67rem;color:#B87898;margin:2px 0 4px 2px;font-family:Roboto Mono,monospace;'>WAS THIS RESPONSE HELPFUL?</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:0.6rem;color:#B87898;margin:2px 0 4px 2px;font-family:Roboto Mono,monospace;'>WAS THIS RESPONSE HELPFUL?</div>", unsafe_allow_html=True)
 
             fb1, fb2, _ = st.columns([1, 1, 6])
             with fb1:
@@ -860,7 +912,7 @@ with col_chat:
                         st.session_state.history_log[-1]["Feedback"] = "No"
                     st.rerun()
 
-    # ── Query Handling ──
+    # Query Handling
     if submitted and user_input and user_input.strip():
         if not st.session_state.bert_loaded:
             st.warning("Model not loaded. Please wait.")
@@ -946,7 +998,7 @@ with col_chat:
 
             st.rerun()
 
-# ── RIGHT COLUMN (current query analysis + session analysis below) ──
+# ── RIGHT COLUMN (only current query analysis) ──
 with col_right:
     st.markdown('<div class="section-label">▸ Current Query Analysis</div>', unsafe_allow_html=True)
 
@@ -954,23 +1006,23 @@ with col_right:
         r = st.session_state.last_result
         m1, m2, m3 = st.columns(3)
         with m1:
-            st.markdown(f'<div class="metric-tile"><div class="val" style="font-size:0.72rem;line-height:1.4;word-break:break-word;">{r["intent"].replace("_"," ").upper()}</div><div class="lbl">Intent</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-tile"><div class="val" style="font-size:0.7rem;line-height:1.3;word-break:break-word;">{r["intent"].replace("_"," ").upper()}</div><div class="lbl">Intent</div></div>', unsafe_allow_html=True)
         with m2:
-            st.markdown(f'<div class="metric-tile"><div class="val" style="font-size:0.85rem;">{SENTIMENT_LABEL.get(r["sentiment"], r["sentiment"]).upper()}</div><div class="lbl">Sentiment</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-tile"><div class="val" style="font-size:0.8rem;">{SENTIMENT_LABEL.get(r["sentiment"], r["sentiment"]).upper()}</div><div class="lbl">Sentiment</div></div>', unsafe_allow_html=True)
         with m3:
             fl = "SECURITY" if r["pre_classified"] else ("LOW CONF" if r["low_confidence"] else "NORMAL")
             fv = "#CC2200" if r["pre_classified"] else ("#A06000" if r["low_confidence"] else "#1A7A2A")
-            st.markdown(f'<div class="metric-tile"><div class="val" style="font-size:0.78rem;color:{fv};">{fl}</div><div class="lbl">Status</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-tile"><div class="val" style="font-size:0.7rem;color:{fv};">{fl}</div><div class="lbl">Status</div></div>', unsafe_allow_html=True)
 
-        st.markdown("<div style='height:14px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         st.markdown('<div class="section-label">▸ Intent Confidence</div>', unsafe_allow_html=True)
         conf_pct    = round(r["intent_confidence"] * 100, 1)
         gauge_color = "#CC2200" if r["pre_classified"] else ("#F59E0B" if conf_pct < 50 else "#D6006D")
         fig_g = go.Figure(go.Indicator(
             mode="gauge+number", value=conf_pct,
-            number={"suffix":"%","font":{"size":20,"color":"#2A0A1A","family":"Roboto Mono"}},
+            number={"suffix":"%","font":{"size":18,"color":"#2A0A1A","family":"Roboto Mono"}},
             gauge={
-                "axis":{"range":[0,100],"tickwidth":1,"tickcolor":"#F0A8CC","tickfont":{"size":9,"color":"#B87898"}},
+                "axis":{"range":[0,100],"tickwidth":1,"tickcolor":"#F0A8CC","tickfont":{"size":8,"color":"#B87898"}},
                 "bar":{"color":gauge_color,"thickness":0.24},
                 "bgcolor":"#FFF0F7","bordercolor":"#F0A8CC","borderwidth":1,
                 "steps":[
@@ -981,8 +1033,8 @@ with col_right:
             },
         ))
         fig_g.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)", height=155,
-            margin=dict(l=16,r=16,t=8,b=8),
+            paper_bgcolor="rgba(0,0,0,0)", height=140,
+            margin=dict(l=12,r=12,t=6,b=6),
             font=dict(family="Roboto Mono", color="#2A0A1A")
         )
         st.plotly_chart(fig_g, use_container_width=True, config={"displayModeBar":False})
@@ -991,8 +1043,8 @@ with col_right:
         bar_cls = "bar-red" if r["pre_classified"] else "bar-blue"
         for name, score in r["top3_intents"]:
             st.markdown(
-                f'<div style="margin-bottom:9px;">'
-                f'<div style="display:flex;justify-content:space-between;font-size:0.74rem;margin-bottom:3px;font-family:Roboto Mono,monospace;">'
+                f'<div style="margin-bottom:8px;">'
+                f'<div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:2px;font-family:Roboto Mono,monospace;">'
                 f'<span style="color:#7A3060;">{name.replace("_"," ").upper()}</span>'
                 f'<span style="color:#D6006D;font-weight:700;">{score}%</span>'
                 f'</div>'
@@ -1008,14 +1060,14 @@ with col_right:
             marker_color=["#CC2200","#B87898","#1A7A2A"],
             text=[f"{v}%" for v in ss.values()],
             textposition="auto",
-            textfont=dict(color="#2A0A1A", size=11, family="Roboto Mono"),
+            textfont=dict(color="#2A0A1A", size=10, family="Roboto Mono"),
         ))
         fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#7A3060", family="Roboto Mono"), height=125,
+            font=dict(color="#7A3060", family="Roboto Mono"), height=110,
             margin=dict(l=0,r=0,t=0,b=0),
             xaxis=dict(showgrid=False, showticklabels=False, range=[0,115]),
-            yaxis=dict(showgrid=False, tickfont=dict(size=10, color="#7A3060")),
+            yaxis=dict(showgrid=False, tickfont=dict(size=9, color="#7A3060")),
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False})
@@ -1023,69 +1075,14 @@ with col_right:
     else:
         st.markdown(
             '<div style="text-align:center;padding:40px 20px;background:#FFFFFF;border:1px solid #F0A8CC;border-radius:8px;">'
-            '<div style="font-size:2rem;margin-bottom:10px;opacity:0.25;color:#D6006D;">▶</div>'
-            '<div style="font-size:0.84rem;color:#B87898;font-family:Roboto Mono,monospace;">ANALYSIS RESULTS WILL APPEAR AFTER YOUR FIRST QUERY.</div>'
-            '<div style="font-size:0.73rem;color:#F0A8CC;margin-top:5px;font-family:Roboto Mono,monospace;">TYPE A QUERY ABOVE AND CLICK SEND</div>'
+            '<div style="font-size:1.8rem;margin-bottom:8px;opacity:0.25;color:#D6006D;">▶</div>'
+            '<div style="font-size:0.78rem;color:#B87898;font-family:Roboto Mono,monospace;">ANALYSIS RESULTS WILL APPEAR AFTER YOUR FIRST QUERY.</div>'
+            '<div style="font-size:0.68rem;color:#F0A8CC;margin-top:4px;">TYPE A QUERY ABOVE AND CLICK SEND</div>'
             '</div>', unsafe_allow_html=True
         )
 
-    # ── Session Analysis (compact, placed below current analysis) ──
-    if st.session_state.total_queries > 0:
-        st.markdown("<div style='height:16px;'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="section-label">▸ Session Overview</div>', unsafe_allow_html=True)
-
-        # Sentiment pie (compact)
-        counts = st.session_state.sentiment_counts
-        fig2 = go.Figure(go.Pie(
-            labels=["Negative","Neutral","Positive"],
-            values=[counts["negative"],counts["neutral"],counts["positive"]],
-            hole=0.55,
-            marker_colors=["#CC2200","#B87898","#1A7A2A"],
-            textfont=dict(size=9, family="Roboto Mono"),
-        ))
-        fig2.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#7A3060", family="Roboto Mono"),
-            height=140, margin=dict(l=10,r=10,t=10,b=10), showlegend=True,
-            legend=dict(
-                orientation="h", yanchor="bottom", y=-0.12,
-                xanchor="center", x=0.5,
-                font=dict(size=8, color="#7A3060")
-            ),
-            annotations=[dict(
-                text=f"<b>{st.session_state.total_queries}</b>",
-                x=0.5, y=0.5,
-                font=dict(size=13, color="#D6006D", family="Oswald"),
-                showarrow=False
-            )]
-        )
-        st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
-
-        # Top intents bar chart (compact)
-        if st.session_state.intent_freq:
-            sorted_i = sorted(st.session_state.intent_freq.items(), key=lambda x: x[1], reverse=True)[:5]
-            fig3 = go.Figure(go.Bar(
-                x=[x[1] for x in sorted_i],
-                y=[x[0].upper() for x in sorted_i],
-                orientation="h",
-                marker_color="#D6006D", opacity=0.85,
-                text=[x[1] for x in sorted_i],
-                textposition="auto",
-                textfont=dict(color="#ffffff", size=9, family="Roboto Mono"),
-            ))
-            fig3.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#7A3060", family="Roboto Mono"),
-                height=100,
-                margin=dict(l=0,r=0,t=0,b=0),
-                xaxis=dict(showgrid=False, showticklabels=False),
-                yaxis=dict(showgrid=False, tickfont=dict(size=8, color="#7A3060")),
-                showlegend=False
-            )
-            st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
-
 # ============================================================
-# HISTORY TABLE (bottom – requires scroll down to view)
+# HISTORY TABLE (bottom – requires scroll down)
 # ============================================================
 if st.session_state.history_log:
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
